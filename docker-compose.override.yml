@@ -1,0 +1,5 @@
+services:
+  backend:
+    image: custom-erpnext:latest
+    volumes:
+      - ../volumes/backend:/home/frappe/frappe-bench
