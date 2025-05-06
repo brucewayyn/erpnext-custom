@@ -1,0 +1,33 @@
+name: Build Custom ERPNext Image
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Base64 encode apps.json
+        id: encode
+        run: |
+          APPS_JSON_BASE64=$(base64 -w 0 apps.json)
+          echo "APPS_JSON_BASE64=$APPS_JSON_BASE64" >> $GITHUB_ENV
+
+      - name: Log encoded output (for debugging only)
+        run: echo "${{ env.APPS_JSON_BASE64 }}"
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg FRAPPE_PATH=https://github.com/frappe/frappe \
+            --build-arg FRAPPE_BRANCH=version-15 \
+            --build-arg APPS_JSON_BASE64=${{ env.APPS_JSON_BASE64 }} \
+            --tag custom-erpnext:latest \
+            --file images/layered/Containerfile .
