@@ -17,8 +17,9 @@ jobs:
       - name: Base64 encode apps.json
         id: encode
         run: |
-          APPS_JSON_BASE64=$(base64 -w 0 apps.json)
+          APPS_JSON_BASE64=$(base64 -w 0 my-erp/apps.json)
           echo "APPS_JSON_BASE64=$APPS_JSON_BASE64" >> $GITHUB_ENV
+
 
       - name: Log encoded output (for debugging only)
         run: echo "${{ env.APPS_JSON_BASE64 }}"
